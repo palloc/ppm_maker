@@ -12,7 +12,7 @@ typedef struct{
 }DOT;
 
 int main(int argc, char **argv){
-	int i, j, k;
+	int i, j;
 	char *new_line = "\n";
 	char *header = "P3\n160 100\n255\n";
 	DOT *flag;
