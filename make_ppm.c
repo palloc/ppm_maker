@@ -54,7 +54,7 @@ int main(int argc, char **argv){
 	}
 	free(flag);
 	free(buf);
-
+	close(fp);
 	return 0;
 }
 
