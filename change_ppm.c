@@ -11,12 +11,9 @@ typedef struct{
 	int blue;
 }DOT;
 
-/*
-*****************************************
- Change Japanese flag to Bangladesh flag
-*****************************************
-*/
-
+/******************************************
+  Change Japanese flag to Bangladesh flag
+******************************************/
 int main(int argc, char **argv){
 	int i, j;
 	char *new_line = "\n";

@@ -11,6 +11,10 @@ typedef struct{
 	int blue;
 }DOT;
 
+
+/******************************
+      Make Japanese flag
+******************************/
 int main(int argc, char **argv){
 	int i, j;
 	char *new_line = "\n";
@@ -18,12 +22,14 @@ int main(int argc, char **argv){
 	DOT *flag;
 	FILE *fp;
 	char *buf;
-
+	//allocate memory
 	flag = (DOT *)calloc(x*y, sizeof(DOT));
 	buf = (char *)calloc(x*y, sizeof(char));
 	
 	fp = fopen(argv[1], "w");
+	//write header
 	fputs(header, fp);
+	//store flag
 	for(i=0; i<y; ++i){
 		for(j=0; j<x; ++j){
 			if(sqrt(pow(abs(y/2 - i), 2) + pow(abs(x/2 - j), 2)) < 25){
@@ -38,6 +44,7 @@ int main(int argc, char **argv){
 			}
 		}
 	}
+	//write flag
 	for(i=0; i<y; ++i){
 		for(j=0; j<x; ++j){
 			sprintf(buf, "%d %d %d ", flag[i*x + j].red, flag[i*x + j].green, flag[i*x + j].blue);
