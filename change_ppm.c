@@ -11,6 +11,12 @@ typedef struct{
 	int blue;
 }DOT;
 
+
+/******************************************
+  Change Japanese flag to Bangladesh flag
+******************************************/
+
+// ppm file 
 void image_read(DOT *flag, FILE *fp){
 	int i = 0, j;
 	char *buf;
@@ -33,46 +39,55 @@ void image_read(DOT *flag, FILE *fp){
 	free(buf);
 }
 
-
-
-/******************************************
-  Change Japanese flag to Bangladesh flag
-******************************************/
-int main(int argc, char **argv){
-	int i, j;
+void image_write(DOT *flag, FILE *fp){
+	int i = 0, j;
 	char *new_line = "\n";
-	char *header = "P3\n160 100\n255\n";
-	FILE *fp_in;
-	FILE *fp_out;
-	DOT *flag;
 	char *buf;
-	//allocate memory
-	flag = (DOT *)calloc(x*y, sizeof(DOT));
+	char *header = "P3\n160 100\n255\n";
 	buf = (char *)calloc(x*y, sizeof(char));
-	//open files
-	fp_in = fopen(argv[1], "r");
-	fp_out = fopen(argv[2], "w");
-	//store flag to flag_in
-	image_read(flag, fp_in);
 	//write header
-	fputs(header, fp_out);
-	//
+	fputs(header, fp);
+	//write flag
 	for(i=0; i<y; ++i){
 		for(j=0; j<x; ++j){
-			//change color(white to green)
+			sprintf(buf, "%d %d %d ", flag[i*x + j].red, flag[i*x + j].green, flag[i*x + j].blue);
+			fputs(buf, fp);
+		}
+		fputs(new_line, fp);
+	}
+	free(buf);
+}
+
+void image_modify(DOT *flag){
+	int i, j;
+	//change color(white to green)	
+	for(i=0; i<y; ++i){
+		for(j=0; j<x; ++j){
 			if(flag[i*x + j].red==255 && flag[i*x + j].green==255 && flag[i*x + j].blue==255){
 				flag[i*x + j].red = 0;
 				flag[i*x + j].green = 107;
 				flag[i*x + j].blue = 77;
 			}
-			sprintf(buf, "%d %d %d ", flag[i*x + j].red, flag[i*x + j].green, flag[i*x + j].blue);
-			fputs(buf, fp_out);
 		}
-		fputs(new_line, fp_out);
 	}
+}
+
+int main(int argc, char **argv){
+	FILE *fp_in;
+	FILE *fp_out;
+	DOT *flag;
+	//allocate memory
+	flag = (DOT *)calloc(x*y, sizeof(DOT));
+
+	//open files
+	fp_in = fopen(argv[1], "r");
+	fp_out = fopen(argv[2], "w");
+
+	image_read(flag, fp_in);
+	image_modify(flag);
+	image_write(flag, fp_out);
 
 	free(flag);
-	free(buf);
 	fclose(fp_in);
 	fclose(fp_out);
 	return 0;
