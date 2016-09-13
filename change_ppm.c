@@ -11,6 +11,30 @@ typedef struct{
 	int blue;
 }DOT;
 
+void image_read(DOT *flag, FILE *fp){
+	int i = 0, j;
+	char *buf;
+	buf = (char *)calloc(x*y, sizeof(char));
+	//remove header 
+	for(j=0; j<3; ++j){
+		fgets(buf, x*y, fp);
+	}
+	while(fgets(buf, x*y, fp) != NULL){
+		flag[i*x].red = atoi(strtok(buf, " "));
+		flag[i*x].green = atoi(strtok(NULL, " "));
+		flag[i*x].blue = atoi(strtok(NULL, " "));
+		for(j=1; j<x; ++j){
+			flag[i*x + j].red = atoi(strtok(NULL, " "));
+			flag[i*x + j].green = atoi(strtok(NULL, " "));
+			flag[i*x + j].blue = atoi(strtok(NULL, " "));
+		}
+		++i;
+	}
+	free(buf);
+}
+
+
+
 /******************************************
   Change Japanese flag to Bangladesh flag
 ******************************************/
@@ -28,23 +52,8 @@ int main(int argc, char **argv){
 	//open files
 	fp_in = fopen(argv[1], "r");
 	fp_out = fopen(argv[2], "w");
-	//remove header
-	fgets(buf, x*y, fp_in);
-	fgets(buf, x*y, fp_in);
-	fgets(buf, x*y, fp_in);
 	//store flag to flag_in
-	i = 0;
-	while(fgets(buf, x*y, fp_in) != NULL){
-		flag[i*x].red = atoi(strtok(buf, " "));
-		flag[i*x].green = atoi(strtok(NULL, " "));
-		flag[i*x].blue = atoi(strtok(NULL, " "));
-		for(j=1; j<x; ++j){
-			flag[i*x + j].red = atoi(strtok(NULL, " "));
-			flag[i*x + j].green = atoi(strtok(NULL, " "));
-			flag[i*x + j].blue = atoi(strtok(NULL, " "));
-		}
-		++i;
-	}
+	image_read(flag, fp_in);
 	//write header
 	fputs(header, fp_out);
 	//
@@ -64,7 +73,8 @@ int main(int argc, char **argv){
 
 	free(flag);
 	free(buf);
-	fclose(fp);
+	fclose(fp_in);
+	fclose(fp_out);
 	return 0;
 }
 
